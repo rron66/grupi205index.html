@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Napoli | Order System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #fef7e8;
+            color: #2c1e12;
+            line-height: 1.6;
+            font-size: 18px;
+        }
+        /* navigation */
+        nav {
+            background: #2c1e12;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #ffeedd;
+            margin: 0 1rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: #e35f2e;
+            color: white;
+        }
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 2rem;
+        }
+       
+        .page {
+            display: none;
+        }
+        .page.active-page {
+            display: block;
+        }
+       
+        .hero {
+            background: linear-gradient(135deg, #c53a1f, #e6743e);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 2rem;
+            margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+        .hours {
+            background: rgba(0,0,0,0.2);
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            margin-top: 1rem;
+        }
+        h2 {
+            border-left: 6px solid #e35f2e;
+            padding-left: 1rem;
+            margin: 1.5rem 0 1rem;
+        }
+        .feature-img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 1.5rem;
+            margin: 1rem 0;
+        }
+        .btn {
+            background: #e35f2e;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #b93b1a;
+        }
+       
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+        .pizza-card {
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .pizza-card:hover {
+            transform: translateY(-5px);
+        }
+        .pizza-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .pizza-card h3 {
+            margin: 1rem 0 0.3rem;
+            color: #c53a1f;
+        }
+        .price {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #e35f2e;
+            margin-bottom: 1rem;
+        }
+        
+        .order-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.3rem;
+            border-radius: 0.8rem;
+            border: 1px solid #d4bfa8;
+            font-size: 1rem;
+            background: #fffef9;
+        }
+        .submit-btn {
+            background: #2a7a3b;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border-radius: 40px;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        .submit-btn:hover {
+            background: #1d5e2c;
+        }
+        .confirm-box {
+            background: #e1f0da;
+            padding: 1.8rem;
+            border-radius: 1.5rem;
+            border-left: 8px solid #2a7a3b;
+            margin: 1rem 0;
+        }
+        footer {
+            background: #2c1e12;
+            color: #ffeedd;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 700px) {
+            body { font-size: 16px; }
+            .hero h1 { font-size: 1.8rem; }
+            .nav-btn { margin: 0 0.3rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+    <button class="nav-btn" onclick="showPage('menu')">🍕 Menu</button>
+    <button class="nav-btn" onclick="showPage('order')">📝 Order Online</button>
+    <button class="nav-btn" onclick="showPage('confirm')">✅ Confirmation</button>
+</nav>
+
+<div class="container">
+   
+    <div id="home" class="page active-page">
+        <div class="hero">
+            <h1>🍕 Pizza Napoli</h1>
+            <p>Authentic wood‑fired pizza • Family recipe since 1982</p>
+            <div class="hours">🕐 Open daily: 11:00 AM – 10:00 PM</div>
+        </div>
+        <h2>Welcome to our pizzeria</h2>
+        <img class="feature-img" src="https://images.pexels.com/photos/1653877/pexels-photo-1653877.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Fresh pizza">
+        <p>We serve classic Neapolitan pizzas, fresh salads, and Italian desserts. Click the Menu to see our pizzas, then place your order.</p>
+        <br>
+        <button class="btn" onclick="showPage('menu')">📋 See Our Menu →</button>
+    </div>
+    <div id="menu" class="page">
+        <h1>🍕 Our Pizzas</h1>
+        <p>👉 Click on any pizza – it will take you to the order page with that pizza already selected.</p>
+        <div class="menu-grid" id="pizzaGrid"></div>
+    </div>
+
+    <div id="order" class="page">
+        <h2>📝 Complete Your Order</h2>
+        <div class="order-form">
+            <form id="orderForm">
+                <label for="pizza">🍕 Pizza / Item</label>
+                <input type="text" id="pizza" name="pizza" placeholder="e.g., Margherita Pizza" required>
+
+                <label for="quantity">🔢 Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+
+                <label for="name">👤 Your Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="address">📍 Address (or "Pickup")</label>
+                <input type="text" id="address" name="address" required>
+
+                <label for="phone">📞 Phone</label>
+                <input type="tel" id="phone" name="phone">
+
+                <label for="notes">📝 Special instructions</label>
+                <textarea id="notes" rows="2"></textarea>
+
+                <button type="submit" class="submit-btn">✅ Place Order →</button>
+            </form>
+        </div>
+    </div>
+
+   
+    <div id="confirm" class="page">
+        <h2>✅ Order Confirmation</h2>
+        <div id="confirmContent" class="confirm-box">
+           
+        </div>
+        <button class="btn" onclick="startNewOrder()">🏠 Start New Order</button>
+    </div>
+</div>
+
+<footer>🕐 Mon–Sun 11:00 – 22:00 | 📞044-111-111 | 📍 42 Evergreen Terrace</footer>
+
+<script>
+   
+    const pizzas = [
+        { name: "Margherita Pizza", price: 12.99, img: "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=300" },
+        { name: "Pepperoni Pizza", price: 14.99, img: "https://images.pexels.com/photos/2619967/pexels-photo-2619967.jpeg?auto=compress&cs=tinysrgb&w=300" },
+        { name: "Veggie Pizza", price: 13.99, img: "https://images.pexels.com/photos/27414596/pexels-photo-27414596.jpeg?auto=compress&cs=tinysrgb&w=300" },
+        { name: "BBQ Chicken Pizza", price: 15.99, img: "https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&w=300" },
+        { name: "Garlic Knots (6)", price: 5.49, img: "https://images.pexels.com/photos/3186654/pexels-photo-3186654.jpeg?auto=compress&cs=tinysrgb&w=300" },
+        { name: "Caprese Salad", price: 8.99, img: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=300" }
+    ];
+
+    function renderMenu() {
+        const grid = document.getElementById('pizzaGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        pizzas.forEach(pizza => {
+            const card = document.createElement('div');
+            card.className = 'pizza-card';
+            card.innerHTML = `
+                <img src="${pizza.img}" alt="${pizza.name}">
+                <h3>${pizza.name}</h3>
+                <div class="price">$${pizza.price.toFixed(2)}</div>
+            `;
+            card.addEventListener('click', () => {
+              
+                document.getElementById('pizza').value = pizza.name;
+           
+                showPage('order');
+            });
+            grid.appendChild(card);
+        });
+    }
+
+   
+    function showPage(pageId) {
+       
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active-page');
+        });
+      
+        document.getElementById(pageId).classList.add('active-page');
+      
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        const pageMap = { 'home': 0, 'menu': 1, 'order': 2, 'confirm': 3 };
+        if (pageMap[pageId] !== undefined) {
+            document.querySelectorAll('.nav-btn')[pageMap[pageId]].classList.add('active');
+        }
+    }
+
+   
+    function handleOrderSubmit(event) {
+        event.preventDefault(); 
+
+      
+        const pizza = document.getElementById('pizza').value.trim();
+        const quantity = document.getElementById('quantity').value;
+        const name = document.getElementById('name').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const notes = document.getElementById('notes').value.trim();
+
+       
+        if (!pizza || !name || !address) {
+            alert('Please fill in all required fields (Pizza, Name, Address).');
+            return;
+        }
+
+      
+        let found = pizzas.find(p => p.name === pizza);
+        let pricePerItem = found ? found.price : 12.99;
+        let total = (parseInt(quantity) || 1) * pricePerItem;
+
+      
+        const confirmDiv = document.getElementById('confirmContent');
+        confirmDiv.innerHTML = `
+            <h3>🍕 Thank you, ${name}!</h3>
+            <p><strong>Order:</strong> ${pizza} (x${quantity})</p>
+            <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+            <p><strong>📍 Delivery to:</strong> ${address}</p>
+            <p><strong>📞 Phone:</strong> ${phone || 'Not provided'}</p>
+            <p><strong>📝 Special instructions:</strong> ${notes || 'None'}</p>
+            <p><strong>⏰ Ordered at:</strong> ${new Date().toLocaleString()}</p>
+            <hr>
+            <p>✅ Your order is confirmed! Ready in ~30 minutes. Call 044-111-111 for changes.</p>
+        `;
+
+      
+        showPage('confirm');
+    }
+    function startNewOrder() { 
+        document.getElementById('orderForm').reset();
+        showPage('home');
+    }
+    document.getElementById('orderForm').addEventListener('submit', handleOrderSubmit); 
+
+
+
+
+    
+    renderMenu();
+</script>
+</body>
+</html>
+
